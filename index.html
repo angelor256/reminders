@@ -13,11 +13,11 @@
 
     <style>
         :root {
-            /* Nuevas Variables de Color */
-            --c-orange:        #FB8243;  /* Naranja / Acentos secundarios */
-            --c-pink:          #FBC0CB;  /* Rosa suave / Destacados y etiquetas */
-            --c-yellow:        #FCE883;  /* Amarillo / Fondos suaves y alertas */
-            --c-teal:          #069494;  /* Teal principal / Botones y estado activo */
+            /* Variables con los Colores de la Paleta Especificada */
+            --c-orange:        #ff8d56;  /* Naranja Cálido / Acentos */
+            --c-pink:          #ffbfcb;  /* Rosa Suave / Destacados */
+            --c-yellow:        #fbe883;  /* Amarillo Pastel / Alertas y Resaltados */
+            --c-teal:          #069594;  /* Deep Teal / Botones y estado activo */
 
             --c-bg-dark:       #121820;  /* Fondo principal */
             --c-card-dark:     #1A232E;  /* Tarjetas y modales */
@@ -26,16 +26,16 @@
 
             --bg-main: var(--c-bg-dark);
             --card-bg: rgba(26, 35, 46, 0.85);
-            --card-hover: rgba(6, 148, 148, 0.15);
-            --border-color: rgba(252, 232, 131, 0.18);
+            --card-hover: rgba(6, 149, 148, 0.15);
+            --border-color: rgba(251, 232, 131, 0.2);
             
             --primary: var(--c-teal);
-            --primary-hover: #057878;
+            --primary-hover: #057a79;
 
             --text-main: var(--c-white);
             --text-muted: #A3B1C2;
             --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.7);
-            --shadow-glow: 0 0 25px rgba(6, 148, 148, 0.25);
+            --shadow-glow: 0 0 25px rgba(6, 149, 148, 0.25);
         }
 
         /* --- OCULTAR SCROLLBARS GLOBALMENTE MANTENIENDO EL SCROLL --- */
@@ -58,8 +58,8 @@
             min-height: 100vh;
             padding-bottom: 60px;
             background-image: 
-                radial-gradient(circle at 10% 10%, rgba(251, 130, 67, 0.1) 0%, transparent 45%),
-                radial-gradient(circle at 90% 80%, rgba(6, 148, 148, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 10% 10%, rgba(255, 141, 86, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(6, 149, 148, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 50% 50%, rgba(18, 24, 32, 0.9) 0%, transparent 70%);
             background-attachment: fixed;
         }
@@ -111,7 +111,7 @@
 
         .brand-section h1 i {
             color: var(--c-orange);
-            filter: drop-shadow(0 0 10px rgba(251, 130, 67, 0.5));
+            filter: drop-shadow(0 0 10px rgba(255, 141, 86, 0.5));
         }
 
         .brand-section .subtitle {
@@ -151,10 +151,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(6, 148, 148, 0.2);
+            background: rgba(6, 149, 148, 0.2);
             padding: 6px 14px;
             border-radius: 10px;
-            border: 1px solid rgba(6, 148, 148, 0.4);
+            border: 1px solid rgba(6, 149, 148, 0.4);
         }
 
         .role-selector-container label {
@@ -211,7 +211,7 @@
 
         .search-container input:focus {
             border-color: var(--c-teal);
-            box-shadow: 0 0 18px rgba(6, 148, 148, 0.3);
+            box-shadow: 0 0 18px rgba(6, 149, 148, 0.3);
         }
 
         .search-container i {
@@ -246,17 +246,17 @@
         .btn-primary { 
             background: var(--c-teal); 
             color: var(--c-white); 
-            box-shadow: 0 4px 15px rgba(6, 148, 148, 0.35);
+            box-shadow: 0 4px 15px rgba(6, 149, 148, 0.35);
             font-weight: 800;
         }
         .btn-primary:hover { 
             background: var(--primary-hover); 
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(6, 148, 148, 0.5);
+            box-shadow: 0 6px 20px rgba(6, 149, 148, 0.5);
         }
 
         .btn-success { 
-            background: rgba(251, 130, 67, 0.15); 
+            background: rgba(255, 141, 86, 0.15); 
             color: var(--c-orange); 
             border: 1px solid var(--c-orange);
         }
@@ -267,7 +267,7 @@
         }
 
         .btn-admin { 
-            background: rgba(251, 192, 203, 0.15); 
+            background: rgba(255, 191, 203, 0.15); 
             color: var(--c-pink); 
             border: 1px solid var(--c-pink);
         }
@@ -317,7 +317,7 @@
             color: var(--c-ultra-dark);
             border-color: var(--c-yellow);
             font-weight: 800;
-            box-shadow: 0 4px 15px rgba(252, 232, 131, 0.3);
+            box-shadow: 0 4px 15px rgba(251, 232, 131, 0.3);
         }
 
         /* Grid & Cards */
@@ -400,7 +400,7 @@
             line-height: 1.6;
             margin-bottom: 18px;
             max-height: 80px;
-            overflow-y: auto; /* Scroll oculto */
+            overflow-y: auto;
         }
 
         .reactions-container {
@@ -433,7 +433,7 @@
         .reaction-pill.active {
             border-color: var(--c-pink);
             color: var(--c-pink);
-            background: rgba(251, 192, 203, 0.15);
+            background: rgba(255, 191, 203, 0.15);
         }
 
         .tags { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -442,11 +442,11 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.6px;
-            background: rgba(6, 148, 148, 0.2);
+            background: rgba(6, 149, 148, 0.2);
             color: var(--c-teal);
             padding: 4px 10px;
             border-radius: 8px;
-            border: 1px solid rgba(6, 148, 148, 0.4);
+            border: 1px solid rgba(6, 149, 148, 0.4);
         }
 
         /* Modals */
@@ -475,7 +475,7 @@
             padding: 32px;
             box-shadow: var(--shadow-lg), var(--shadow-glow);
             max-height: 90vh;
-            overflow-y: auto; /* Scroll oculto */
+            overflow-y: auto;
         }
 
         .modal-header {
@@ -529,7 +529,7 @@
         }
         .form-group input:focus, .form-group select:focus { 
             border-color: var(--c-teal); 
-            box-shadow: 0 0 10px rgba(6, 148, 148, 0.3);
+            box-shadow: 0 0 10px rgba(6, 149, 148, 0.3);
         }
 
         /* BARRA DE HERRAMIENTAS WYSIWYG */
@@ -580,7 +580,7 @@
 
         .editor-content:focus {
             border-color: var(--c-teal);
-            box-shadow: 0 0 10px rgba(6, 148, 148, 0.3);
+            box-shadow: 0 0 10px rgba(6, 149, 148, 0.3);
         }
 
         /* Estilos de contenido enriquecido */
@@ -691,9 +691,9 @@
             transition: all 0.2s ease;
             font-family: inherit;
         }
-        .quiz-opt-btn:hover { border-color: var(--c-teal); background: rgba(6, 148, 148, 0.15); }
-        .quiz-opt-btn.correct { background: rgba(6, 148, 148, 0.3) !important; border-color: var(--c-teal) !important; color: var(--c-white); }
-        .quiz-opt-btn.wrong { background: rgba(251, 130, 67, 0.25) !important; border-color: var(--c-orange) !important; }
+        .quiz-opt-btn:hover { border-color: var(--c-teal); background: rgba(6, 149, 148, 0.15); }
+        .quiz-opt-btn.correct { background: rgba(6, 149, 148, 0.3) !important; border-color: var(--c-teal) !important; color: var(--c-white); }
+        .quiz-opt-btn.wrong { background: rgba(255, 141, 86, 0.25) !important; border-color: var(--c-orange) !important; }
 
         .no-results { grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-muted); display: none; }
     </style>
