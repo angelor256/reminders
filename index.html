@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Encuestas & Supervisión</title>
+  <style>
+    /* Estilos Neumórficos / Clean SaaS Design */
+    :root {
+      --bg-main: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      --success: #10B981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); padding: 20px; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 16px 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .role-selector label { font-weight: 600; margin-right: 8px; font-size: 14px; }
+    .role-selector select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    h2 { font-size: 18px; margin-bottom: 16px; color: var(--text-main); }
+    .hidden { display: none !important; }
+
+    /* Formulario de Preguntas */
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    /* Tablas Limpias */
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+    th { background-color: #F1F5F9; font-weight: 600; color: var(--text-muted); }
+
+    /* Botones */
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: #E2E8F0; color: var(--text-main); }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #E0E7FF;
+      color: #3730A3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header con Control de Roles -->
+  <header>
+    <div>
+      <h1 style="font-size: 20px; font-weight: 700;">Portal de Operaciones</h1>
+      <p style="font-size: 13px; color: var(--text-muted);">Módulo de Feedback y Evaluaciones</p>
+    </div>
+    <div class="role-selector">
+      <label for="userRole">Rol Actual:</label>
+      <select id="userRole" onchange="switchRole(this.value)">
+        <option value="admin">Supervisor / Floor Support (Admin)</option>
+        <option value="agent">Agente (Respuestas)</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- VISTA DE AGENTE -->
+  <div id="agentView" class="card hidden">
+    <h2>Encuesta Operativa de Turno</h2>
+    <form id="surveyForm" onsubmit="submitSurvey(event)">
+      <div id="surveyQuestions"></div>
+      <button type="submit" class="btn btn-primary">Enviar Respuestas</button>
+    </form>
+  </div>
+
+  <!-- VISTA DE SUPERVISOR / FLOOR SUPPORT -->
+  <div id="adminView">
+    <!-- Creador / Editor de Preguntas -->
+    <div class="card">
+      <h2>Gestión de Preguntas (Supervisores y Floor Supports)</h2>
+      <div class="form-group">
+        <label>Nueva Pregunta:</label>
+        <input type="text" id="newQuestionText" placeholder="Ej. ¿Tuviste algún bloqueo técnico en las herramientas hoy?">
+      </div>
+      <div class="form-group">
+        <label>Tipo de Respuesta:</label>
+        <select id="newQuestionType">
+          <option value="text">Texto Libre</option>
+          <option value="rating">Escala (1 a 5)</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="addQuestion()">Agregar Pregunta</button>
+
+      <h3 style="font-size: 15px; margin-top: 20px; margin-bottom: 10px;">Preguntas Activas:</h3>
+      <ul id="questionsList" style="padding-left: 20px; font-size: 14px;"></ul>
+    </div>
+
+    <!-- Registro de Respuestas de Agentes -->
+    <div class="card">
+      <h2>Respuestas Recibidas de Agentes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Agente</th>
+            <th>Fecha / Hora</th>
+            <th>Detalle de Respuestas</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="responsesTable">
+          <!-- Datos dinámicos -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Estructura de datos en memoria
+  let questions = [
+    { id: 1, text: "¿Cómo evalúas el volumen de llamadas/tickets en tu turno?", type: "rating" },
+    { id: 2, text: "¿Requiriste soporte en piso de un Floor Support hoy?", type: "text" }
+  ];
+
+  let responses = [
+    { agent: "Agente #104", date: "2026-07-20 08:15", answers: { 1: "4", 2: "Sí, para revisión de caso especial." } }
+  ];
+
+  function renderQuestions() {
+    // Render list for Admin
+    const list = document.getElementById("questionsList");
+    list.innerHTML = "";
+    questions.forEach(q => {
+      list.innerHTML += `<li><strong>[${q.type}]</strong> ${q.text}</li>`;
+    });
+
+    // Render form for Agent
+    const formContainer = document.getElementById("surveyQuestions");
+    formContainer.innerHTML = "";
+    questions.forEach(q => {
+      formContainer.innerHTML += `
+        <div class="form-group">
+          <label>${q.text}</label>
+          ${q.type === 'text' 
+            ? `<textarea id="q_${q.id}" rows="2" required></textarea>` 
+            : `<input type="number" id="q_${q.id}" min="1" max="5" placeholder="1 al 5" required>`}
+        </div>
+      `;
+    });
+  }
+
+  function renderResponses() {
+    const table = document.getElementById("responsesTable");
+    table.innerHTML = "";
+    responses.forEach(r => {
+      let answersFormatted = Object.entries(r.answers)
+        .map(([qId, val]) => {
+          let q = questions.find(item => item.id == qId);
+          return `<strong>${q ? q.text : 'Pregunta'}:</strong> ${val}`;
+        }).join("<br>");
+
+      table.innerHTML += `
+        <tr>
+          <td><strong>${r.agent}</strong></td>
+          <td>${r.date}</td>
+          <td>${answersFormatted}</td>
+          <td><span class="badge">Completado</span></td>
+        </tr>
+      `;
+    });
+  }
+
+  function addQuestion() {
+    const text = document.getElementById("newQuestionText").value;
+    const type = document.getElementById("newQuestionType").value;
+    if (!text) return alert("Escriba el texto de la pregunta.");
+
+    questions.push({ id: Date.now(), text, type });
+    document.getElementById("newQuestionText").value = "";
+    renderQuestions();
+  }
+
+  function submitSurvey(e) {
+    e.preventDefault();
+    let newAnswers = {};
+    questions.forEach(q => {
+      newAnswers[q.id] = document.getElementById(`q_${q.id}`).value;
+    });
+
+    responses.push({
+      agent: "Agente Sesión Actual",
+      date: new Date().toLocaleString(),
+      answers: newAnswers
+    });
+
+    alert("¡Encuesta enviada con éxito!");
+    document.getElementById("surveyForm").reset();
+    renderResponses();
+  }
+
+  function switchRole(role) {
+    if (role === 'admin') {
+      document.getElementById("adminView").classList.remove("hidden");
+      document.getElementById("agentView").classList.add("hidden");
+    } else {
+      document.getElementById("adminView").classList.add("hidden");
+      document.getElementById("agentView").classList.remove("hidden");
+    }
+  }
+
+  // Inicializar
+  renderQuestions();
+  renderResponses();
+</script>
+
+</body>
+</html>
