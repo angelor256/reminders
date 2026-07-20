@@ -13,27 +13,29 @@
 
     <style>
         :root {
-            /* Palette Variables */
-            --c-bg-dark:       #1A1E29;  /* Principal */
-            --c-card-dark:     #132D46;  /* Tarjetas, modales */
-            --c-emerald:       #01C38E;  /* Acentos y CTAs */
-            --c-white:         #FFFFFF;  /* Texto de alto contraste */
+            /* Nuevas Variables de Color */
+            --c-orange:        #FB8243;  /* Naranja / Acentos secundarios */
+            --c-pink:          #FBC0CB;  /* Rosa suave / Destacados y etiquetas */
+            --c-yellow:        #FCE883;  /* Amarillo / Fondos suaves y alertas */
+            --c-teal:          #069494;  /* Teal principal / Botones y estado activo */
 
-            --c-ultra-dark:    #11141C;
-            --c-card-bg:       rgba(19, 45, 70, 0.75);
+            --c-bg-dark:       #121820;  /* Fondo principal */
+            --c-card-dark:     #1A232E;  /* Tarjetas y modales */
+            --c-ultra-dark:    #0B0E14;  /* Inputs y áreas secundarias */
+            --c-white:         #FFFFFF;
 
             --bg-main: var(--c-bg-dark);
-            --card-bg: var(--c-card-bg);
-            --card-hover: rgba(1, 195, 142, 0.12);
-            --border-color: rgba(255, 255, 255, 0.12);
+            --card-bg: rgba(26, 35, 46, 0.85);
+            --card-hover: rgba(6, 148, 148, 0.15);
+            --border-color: rgba(252, 232, 131, 0.18);
             
-            --primary: var(--c-emerald);
-            --primary-hover: #00a87a;
+            --primary: var(--c-teal);
+            --primary-hover: #057878;
 
             --text-main: var(--c-white);
-            --text-muted: #8E9BAE;
+            --text-muted: #A3B1C2;
             --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.7);
-            --shadow-glow: 0 0 25px rgba(1, 195, 142, 0.15);
+            --shadow-glow: 0 0 25px rgba(6, 148, 148, 0.25);
         }
 
         /* --- OCULTAR SCROLLBARS GLOBALMENTE MANTENIENDO EL SCROLL --- */
@@ -56,9 +58,9 @@
             min-height: 100vh;
             padding-bottom: 60px;
             background-image: 
-                radial-gradient(circle at 10% 10%, rgba(1, 195, 142, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 90% 80%, rgba(19, 45, 70, 0.5) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(26, 30, 41, 0.8) 0%, transparent 70%);
+                radial-gradient(circle at 10% 10%, rgba(251, 130, 67, 0.1) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(6, 148, 148, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(18, 24, 32, 0.9) 0%, transparent 70%);
             background-attachment: fixed;
         }
 
@@ -70,7 +72,7 @@
 
         /* Header Layout */
         .header {
-            background: linear-gradient(135deg, rgba(19, 45, 70, 0.95) 0%, rgba(17, 20, 28, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(26, 35, 46, 0.95) 0%, rgba(11, 14, 20, 0.95) 100%);
             backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
             border-radius: 24px;
@@ -85,7 +87,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--c-emerald), rgba(255, 255, 255, 0.3), transparent);
+            background: linear-gradient(90deg, var(--c-orange), var(--c-yellow), var(--c-teal));
         }
 
         .header-top {
@@ -108,8 +110,8 @@
         }
 
         .brand-section h1 i {
-            color: var(--c-emerald);
-            filter: drop-shadow(0 0 10px rgba(1, 195, 142, 0.5));
+            color: var(--c-orange);
+            filter: drop-shadow(0 0 10px rgba(251, 130, 67, 0.5));
         }
 
         .brand-section .subtitle {
@@ -126,7 +128,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            background: rgba(17, 20, 28, 0.85);
+            background: rgba(11, 14, 20, 0.85);
             padding: 8px 18px;
             border-radius: 16px;
             border: 1px solid var(--border-color);
@@ -142,23 +144,23 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        .stat-xp { color: var(--c-emerald); }
-        .stat-streak { color: var(--c-white); }
+        .stat-xp { color: var(--c-yellow); }
+        .stat-streak { color: var(--c-pink); }
 
         .role-selector-container {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(19, 45, 70, 0.6);
+            background: rgba(6, 148, 148, 0.2);
             padding: 6px 14px;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(6, 148, 148, 0.4);
         }
 
         .role-selector-container label {
             font-size: 11px;
             font-weight: 800;
-            color: var(--c-emerald);
+            color: var(--c-yellow);
             text-transform: uppercase;
             letter-spacing: 0.8px;
         }
@@ -208,8 +210,8 @@
         }
 
         .search-container input:focus {
-            border-color: var(--c-emerald);
-            box-shadow: 0 0 18px rgba(1, 195, 142, 0.25);
+            border-color: var(--c-teal);
+            box-shadow: 0 0 18px rgba(6, 148, 148, 0.3);
         }
 
         .search-container i {
@@ -217,7 +219,7 @@
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--c-emerald);
+            color: var(--c-orange);
         }
 
         .action-btns {
@@ -242,36 +244,36 @@
         }
 
         .btn-primary { 
-            background: var(--c-emerald); 
-            color: #11141C; 
-            box-shadow: 0 4px 15px rgba(1, 195, 142, 0.3);
+            background: var(--c-teal); 
+            color: var(--c-white); 
+            box-shadow: 0 4px 15px rgba(6, 148, 148, 0.35);
             font-weight: 800;
         }
         .btn-primary:hover { 
             background: var(--primary-hover); 
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(1, 195, 142, 0.45);
+            box-shadow: 0 6px 20px rgba(6, 148, 148, 0.5);
         }
 
         .btn-success { 
-            background: rgba(255, 255, 255, 0.1); 
-            color: var(--c-white); 
-            border: 1px solid var(--border-color);
+            background: rgba(251, 130, 67, 0.15); 
+            color: var(--c-orange); 
+            border: 1px solid var(--c-orange);
         }
         .btn-success:hover { 
+            background: var(--c-orange);
+            color: var(--c-ultra-dark);
             transform: translateY(-2px);
-            border-color: var(--c-emerald);
-            color: var(--c-emerald);
         }
 
         .btn-admin { 
-            background: rgba(19, 45, 70, 0.8); 
-            color: var(--c-emerald); 
-            border: 1px solid var(--border-color);
+            background: rgba(251, 192, 203, 0.15); 
+            color: var(--c-pink); 
+            border: 1px solid var(--c-pink);
         }
         .btn-admin:hover { 
-            background: var(--c-card-dark); 
-            color: var(--c-white);
+            background: var(--c-pink); 
+            color: var(--c-ultra-dark);
             transform: translateY(-2px);
         }
 
@@ -292,7 +294,7 @@
         }
 
         .category-btn {
-            background: rgba(19, 45, 70, 0.5);
+            background: rgba(26, 35, 46, 0.6);
             color: var(--text-muted);
             border: 1px solid var(--border-color);
             padding: 9px 20px;
@@ -306,16 +308,16 @@
         }
 
         .category-btn:hover {
-            border-color: var(--c-emerald);
+            border-color: var(--c-yellow);
             color: var(--c-white);
         }
 
         .category-btn.active {
-            background: var(--c-emerald);
-            color: #11141C;
-            border-color: var(--c-emerald);
+            background: var(--c-yellow);
+            color: var(--c-ultra-dark);
+            border-color: var(--c-yellow);
             font-weight: 800;
-            box-shadow: 0 4px 15px rgba(1, 195, 142, 0.3);
+            box-shadow: 0 4px 15px rgba(252, 232, 131, 0.3);
         }
 
         /* Grid & Cards */
@@ -341,7 +343,7 @@
         .reminder-card:hover {
             transform: translateY(-5px);
             background: var(--card-hover);
-            border-color: var(--c-emerald);
+            border-color: var(--c-teal);
             box-shadow: var(--shadow-lg), var(--shadow-glow);
         }
 
@@ -381,8 +383,8 @@
             font-size: 13px;
         }
 
-        .icon-btn:hover { background: var(--c-emerald); color: #11141C; border-color: var(--c-emerald); }
-        .icon-btn.delete-btn:hover { background: #ff4d4d; color: var(--c-white); border-color: #ff4d4d; }
+        .icon-btn:hover { background: var(--c-teal); color: var(--c-white); border-color: var(--c-teal); }
+        .icon-btn.delete-btn:hover { background: var(--c-orange); color: var(--c-ultra-dark); border-color: var(--c-orange); }
 
         .card-body h3 {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -398,7 +400,7 @@
             line-height: 1.6;
             margin-bottom: 18px;
             max-height: 80px;
-            overflow-y: auto; /* Permite scroll sin mostrar barra */
+            overflow-y: auto; /* Scroll oculto */
         }
 
         .reactions-container {
@@ -424,14 +426,14 @@
         }
 
         .reaction-pill:hover {
-            border-color: var(--c-emerald);
+            border-color: var(--c-pink);
             color: var(--c-white);
         }
 
         .reaction-pill.active {
-            border-color: var(--c-emerald);
-            color: var(--c-emerald);
-            background: rgba(1, 195, 142, 0.15);
+            border-color: var(--c-pink);
+            color: var(--c-pink);
+            background: rgba(251, 192, 203, 0.15);
         }
 
         .tags { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -440,18 +442,18 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.6px;
-            background: rgba(19, 45, 70, 0.8);
-            color: var(--c-emerald);
+            background: rgba(6, 148, 148, 0.2);
+            color: var(--c-teal);
             padding: 4px 10px;
             border-radius: 8px;
-            border: 1px solid rgba(1, 195, 142, 0.3);
+            border: 1px solid rgba(6, 148, 148, 0.4);
         }
 
         /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(17, 20, 28, 0.88);
+            background: rgba(11, 14, 20, 0.88);
             backdrop-filter: blur(10px);
             display: flex;
             justify-content: center;
@@ -473,7 +475,7 @@
             padding: 32px;
             box-shadow: var(--shadow-lg), var(--shadow-glow);
             max-height: 90vh;
-            overflow-y: auto; /* Permite scroll oculto */
+            overflow-y: auto; /* Scroll oculto */
         }
 
         .modal-header {
@@ -500,7 +502,7 @@
             transition: color 0.2s;
         }
 
-        .close-modal:hover { color: var(--c-emerald); }
+        .close-modal:hover { color: var(--c-orange); }
 
         /* Form Controls & Rich Text Editor */
         .form-group { margin-bottom: 20px; }
@@ -509,7 +511,7 @@
             margin-bottom: 8px;
             font-size: 11px;
             font-weight: 800;
-            color: var(--c-emerald);
+            color: var(--c-yellow);
             text-transform: uppercase;
             letter-spacing: 0.8px;
         }
@@ -526,8 +528,8 @@
             transition: border-color 0.2s;
         }
         .form-group input:focus, .form-group select:focus { 
-            border-color: var(--c-emerald); 
-            box-shadow: 0 0 10px rgba(1, 195, 142, 0.25);
+            border-color: var(--c-teal); 
+            box-shadow: 0 0 10px rgba(6, 148, 148, 0.3);
         }
 
         /* BARRA DE HERRAMIENTAS WYSIWYG */
@@ -543,7 +545,7 @@
         }
 
         .editor-btn {
-            background: rgba(19, 45, 70, 0.8);
+            background: rgba(26, 35, 46, 0.8);
             border: 1px solid var(--border-color);
             color: var(--c-white);
             padding: 6px 12px;
@@ -555,9 +557,9 @@
         }
 
         .editor-btn:hover {
-            background: var(--c-emerald);
-            color: #11141C;
-            border-color: var(--c-emerald);
+            background: var(--c-teal);
+            color: var(--c-white);
+            border-color: var(--c-teal);
         }
 
         .editor-content {
@@ -577,17 +579,17 @@
         }
 
         .editor-content:focus {
-            border-color: var(--c-emerald);
-            box-shadow: 0 0 10px rgba(1, 195, 142, 0.25);
+            border-color: var(--c-teal);
+            box-shadow: 0 0 10px rgba(6, 148, 148, 0.3);
         }
 
-        /* Estilos aplicados dentro del contenido HTML con formato */
-        .formatted-content h2 { font-size: 1.3em; color: var(--c-emerald); margin: 12px 0 6px 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .formatted-content h3 { font-size: 1.1em; color: var(--c-white); margin: 10px 0 4px 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        /* Estilos de contenido enriquecido */
+        .formatted-content h2 { font-size: 1.3em; color: var(--c-yellow); margin: 12px 0 6px 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .formatted-content h3 { font-size: 1.1em; color: var(--c-pink); margin: 10px 0 4px 0; font-family: 'Plus Jakarta Sans', sans-serif; }
         .formatted-content p { margin-bottom: 8px; }
         .formatted-content ul, .formatted-content ol { padding-left: 20px; margin-bottom: 10px; }
         .formatted-content li { margin-bottom: 4px; }
-        .formatted-content blockquote { border-left: 3px solid var(--c-emerald); padding-left: 12px; color: var(--text-muted); font-style: italic; margin: 8px 0; }
+        .formatted-content blockquote { border-left: 3px solid var(--c-orange); padding-left: 12px; color: var(--text-muted); font-style: italic; margin: 8px 0; }
 
         .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .checkbox-label { 
@@ -599,7 +601,7 @@
             cursor: pointer; 
         }
 
-        /* Admin Quiz Dashboard */
+        /* Admin Dashboard */
         .admin-stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -619,15 +621,15 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 2.2em; 
             font-weight: 800; 
-            color: var(--c-emerald); 
+            color: var(--c-teal); 
         }
         .stat-card-lbl { 
             font-size: 11px; 
             font-weight: 800; 
-            color: var(--c-emerald); 
+            color: var(--c-yellow); 
             text-transform: uppercase; 
             letter-spacing: 0.6px;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .admin-tabs { 
@@ -651,8 +653,8 @@
             transition: all 0.2s;
         }
         .admin-tab-btn.active { 
-            background: var(--c-emerald); 
-            color: #11141C; 
+            background: var(--c-teal); 
+            color: var(--c-white); 
         }
 
         .responses-list, .questions-list { display: flex; flex-direction: column; gap: 12px; }
@@ -689,9 +691,9 @@
             transition: all 0.2s ease;
             font-family: inherit;
         }
-        .quiz-opt-btn:hover { border-color: var(--c-emerald); background: rgba(1, 195, 142, 0.1); }
-        .quiz-opt-btn.correct { background: rgba(1, 195, 142, 0.25) !important; border-color: var(--c-emerald) !important; color: var(--c-white); }
-        .quiz-opt-btn.wrong { background: rgba(255, 77, 77, 0.2) !important; border-color: #ff4d4d !important; }
+        .quiz-opt-btn:hover { border-color: var(--c-teal); background: rgba(6, 148, 148, 0.15); }
+        .quiz-opt-btn.correct { background: rgba(6, 148, 148, 0.3) !important; border-color: var(--c-teal) !important; color: var(--c-white); }
+        .quiz-opt-btn.wrong { background: rgba(251, 130, 67, 0.25) !important; border-color: var(--c-orange) !important; }
 
         .no-results { grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-muted); display: none; }
     </style>
@@ -705,7 +707,7 @@
                 <div class="brand-section">
                     <h1><i class="fa-solid fa-layer-group"></i> BA Hub 3.0</h1>
                     <div class="subtitle">
-                        <i class="fa-regular fa-calendar" style="color: var(--c-emerald);"></i> <span id="currentDate"></span>
+                        <i class="fa-regular fa-calendar" style="color: var(--c-orange);"></i> <span id="currentDate"></span>
                     </div>
                 </div>
 
@@ -750,7 +752,7 @@
         <!-- Cards Grid -->
         <div class="reminders-grid" id="remindersGrid"></div>
         <div class="no-results" id="noResults">
-            <i class="fa-solid fa-folder-open" style="font-size: 2.8em; margin-bottom: 12px; color: var(--c-emerald);"></i>
+            <i class="fa-solid fa-folder-open" style="font-size: 2.8em; margin-bottom: 12px; color: var(--c-orange);"></i>
             <p>No reminders matched your search criteria.</p>
         </div>
     </div>
@@ -822,7 +824,6 @@
             <div style="text-align: center; font-size: 3.2em; margin-bottom: 12px;" id="viewPostEmoji">💡</div>
             <h3 style="text-align: center; font-size: 1.35em; color: var(--c-white); margin-bottom: 18px; font-family: 'Plus Jakarta Sans', sans-serif;" id="viewPostTitle">Title</h3>
             
-            <!-- Contenedor con formato completo y scroll oculto -->
             <div class="formatted-content" style="background: var(--c-ultra-dark); padding: 20px; border-radius: 14px; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 14px; line-height: 1.65; margin-bottom: 22px; max-height: 350px; overflow-y: auto;" id="viewPostDesc"></div>
             
             <div class="tags" id="viewPostTags"></div>
@@ -836,7 +837,7 @@
     <div class="modal-overlay" id="quizModal">
         <div class="modal-card">
             <div class="modal-header">
-                <h2><i class="fa-solid fa-trophy" style="color: var(--c-emerald);"></i> Weekly Knowledge Quiz</h2>
+                <h2><i class="fa-solid fa-trophy" style="color: var(--c-yellow);"></i> Weekly Knowledge Quiz</h2>
                 <button class="close-modal" onclick="closeQuizModal()"><i class="fas fa-times"></i></button>
             </div>
             <div id="quizBody"></div>
@@ -847,7 +848,7 @@
     <div class="modal-overlay" id="adminModal">
         <div class="modal-card" style="max-width: 820px;">
             <div class="modal-header">
-                <h2><i class="fa-solid fa-user-shield" style="color: var(--c-emerald);"></i> Admin Quiz & Response Panel</h2>
+                <h2><i class="fa-solid fa-user-shield" style="color: var(--c-pink);"></i> Admin Quiz & Response Panel</h2>
                 <button class="close-modal" onclick="closeAdminModal()"><i class="fas fa-times"></i></button>
             </div>
 
@@ -1332,10 +1333,10 @@
 
                 container.innerHTML = `
                     <div style="text-align: center; padding: 20px 0;">
-                        <i class="fa-solid fa-award" style="font-size: 3.8em; color: var(--c-emerald); margin-bottom: 15px;"></i>
+                        <i class="fa-solid fa-award" style="font-size: 3.8em; color: var(--c-yellow); margin-bottom: 15px;"></i>
                         <h2 style="color: var(--c-white); font-size: 1.6em; margin-bottom: 10px; font-family: 'Plus Jakarta Sans', sans-serif;">Quiz Completed!</h2>
-                        <div style="font-size: 2.8em; font-weight: 800; color: var(--c-emerald); margin: 15px 0;">${percentage}%</div>
-                        <p style="color: var(--c-emerald); font-weight: 700; margin-bottom: 22px;">+${earnedXP} XP Earned</p>
+                        <div style="font-size: 2.8em; font-weight: 800; color: var(--c-teal); margin: 15px 0;">${percentage}%</div>
+                        <p style="color: var(--c-yellow); font-weight: 700; margin-bottom: 22px;">+${earnedXP} XP Earned</p>
                         <button class="btn btn-primary" style="margin: 0 auto;" onclick="closeQuizModal()">Return to Hub</button>
                     </div>
                 `;
@@ -1344,7 +1345,7 @@
 
             const q = questions[currentQuizIndex];
             container.innerHTML = `
-                <div style="font-size: 11px; font-weight: 800; color: var(--c-emerald); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.8px;">Question ${currentQuizIndex + 1} of ${questions.length}</div>
+                <div style="font-size: 11px; font-weight: 800; color: var(--c-yellow); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.8px;">Question ${currentQuizIndex + 1} of ${questions.length}</div>
                 <h3 style="font-size: 1.15em; color: var(--c-white); margin-bottom: 18px; font-family: 'Plus Jakarta Sans', sans-serif;">${q.question}</h3>
                 <div>
                     ${q.options.map((opt, idx) => `
@@ -1429,18 +1430,18 @@
                 box.className = 'item-box';
                 box.innerHTML = `
                     <div class="item-box-header">
-                        <span><i class="fa-solid fa-user" style="color: var(--c-emerald);"></i> Role: ${sub.userRole}</span>
-                        <span style="color: ${sub.percentage >= 70 ? 'var(--c-emerald)' : '#ff4d4d'}">${sub.score}/${sub.total} (${sub.percentage}%)</span>
+                        <span><i class="fa-solid fa-user" style="color: var(--c-yellow);"></i> Role: ${sub.userRole}</span>
+                        <span style="color: ${sub.percentage >= 70 ? 'var(--c-teal)' : 'var(--c-orange)'}">${sub.score}/${sub.total} (${sub.percentage}%)</span>
                     </div>
                     <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Submitted: ${sub.date}</div>
                     <details style="font-size: 12px; color: var(--text-muted);">
-                        <summary style="cursor: pointer; color: var(--c-emerald); font-weight: 600;">View Question Breakdown</summary>
+                        <summary style="cursor: pointer; color: var(--c-teal); font-weight: 600;">View Question Breakdown</summary>
                         <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
                             ${sub.details.map(d => `
                                 <div style="background: rgba(255,255,255,0.04); padding: 8px; border-radius: 6px;">
                                     <strong style="color: var(--c-white);">Q: ${d.question}</strong><br>
-                                    Answer: <span style="color:${d.isCorrect ? 'var(--c-emerald)' : '#ff4d4d'}">${d.selected}</span>
-                                    ${!d.isCorrect ? `<br><small style="color: var(--c-emerald)">Correct: ${d.correct}</small>` : ''}
+                                    Answer: <span style="color:${d.isCorrect ? 'var(--c-teal)' : 'var(--c-orange)'}">${d.selected}</span>
+                                    ${!d.isCorrect ? `<br><small style="color: var(--c-yellow)">Correct: ${d.correct}</small>` : ''}
                                 </div>
                             `).join('')}
                         </div>
@@ -1471,7 +1472,7 @@
                         </div>
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted);">
-                        Correct Answer: <span style="color: var(--c-emerald); font-weight: 600;">${q.options[q.correctIndex]}</span>
+                        Correct Answer: <span style="color: var(--c-teal); font-weight: 600;">${q.options[q.correctIndex]}</span>
                     </div>
                 `;
                 container.appendChild(box);
