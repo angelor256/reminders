@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpsControl - Operations & Survey Management</title>
+  <title>OpsControl - Operations, Surveys & Reminders</title>
   <!-- Google Fonts & FontAwesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -115,7 +115,7 @@
     .metric-data h4 { font-size: 13px; color: var(--text-muted); font-weight: 500; }
     .metric-data p { font-size: 22px; font-weight: 700; color: var(--text-main); margin-top: 2px; }
 
-    /* CARDS & TABLES */
+    /* CARDS & PANELS */
     .panel {
       background: var(--card-bg);
       border-radius: 12px;
@@ -126,6 +126,40 @@
     }
     .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .panel-header h3 { font-size: 18px; font-weight: 600; }
+
+    /* REMINDERS STYLING */
+    .reminder-card {
+      background: #FFFBEB;
+      border-left: 4px solid var(--warning);
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .reminder-card.urgent {
+      background: #FEF2F2;
+      border-left-color: var(--danger);
+    }
+    .reminder-card .reminder-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .reminder-card .reminder-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+    .reminder-card .reminder-date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .reminder-card p {
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.5;
+    }
 
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th { background: #F8FAFC; padding: 12px 16px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border-color); }
@@ -168,6 +202,7 @@
     .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
     .badge-success { background: #D1FAE5; color: #065F46; }
     .badge-pending { background: #FEF3C7; color: #92400E; }
+    .badge-urgent { background: #FEE2E2; color: #991B1B; }
 
     /* MODAL */
     .modal-overlay {
@@ -192,6 +227,7 @@
       </div>
       <ul class="nav-menu">
         <li class="nav-item active" onclick="switchTab('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</li>
+        <li class="nav-item" onclick="switchTab('remindersAdmin')"><i class="fa-solid fa-bullhorn"></i> Gestor Reminders</li>
         <li class="nav-item" onclick="switchTab('builder')"><i class="fa-solid fa-pen-to-square"></i> Editar Encuestas</li>
         <li class="nav-item" onclick="switchTab('responses')"><i class="fa-solid fa-list-check"></i> Respuestas Agentes</li>
         <li class="nav-item" onclick="switchTab('agentView')"><i class="fa-solid fa-user-pen"></i> Vista Agente</li>
@@ -207,7 +243,7 @@
   <main>
     <header>
       <div>
-        <h2 style="font-size: 20px; font-weight: 700;">Gestión de Desempeño & Feedback</h2>
+        <h2 style="font-size: 20px; font-weight: 700;">Gestión de Desempeño & Updates</h2>
         <p style="font-size: 13px; color: var(--text-muted);">Panel exclusivo para Administración y Soporte de Piso</p>
       </div>
       <div class="role-badge">
@@ -220,6 +256,13 @@
       <!-- DASHBOARD OVERVIEW TAB -->
       <div id="tab-dashboard">
         <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon" style="background:#FEF3C7; color:var(--warning);"><i class="fa-solid fa-bell"></i></div>
+            <div class="metric-data">
+              <h4>Reminders Activos</h4>
+              <p id="totalRemindersCount">0</p>
+            </div>
+          </div>
           <div class="metric-card">
             <div class="metric-icon"><i class="fa-solid fa-clipboard-question"></i></div>
             <div class="metric-data">
@@ -234,13 +277,15 @@
               <p id="totalResponsesCount">0</p>
             </div>
           </div>
-          <div class="metric-card">
-            <div class="metric-icon" style="background:#F5F3FF; color:var(--accent);"><i class="fa-solid fa-users"></i></div>
-            <div class="metric-data">
-              <h4>Cobertura Agentes</h4>
-              <p>94.2%</p>
-            </div>
+        </div>
+
+        <!-- REMINDERS PUBLICADOS (VISTA GENERAL) -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-bullhorn" style="color:var(--primary); margin-right:8px;"></i> Reminders / Updates Recientes de la Empresa</h3>
+            <button class="btn btn-outline" onclick="switchTab('remindersAdmin')">Administrar Updates</button>
           </div>
+          <div id="dashboardRemindersList"></div>
         </div>
 
         <div class="panel">
@@ -262,7 +307,42 @@
         </div>
       </div>
 
-      <!-- BUILDER TAB (EDITAR PREGUNTAS Y DEMÁS) -->
+      <!-- ADMIN REMINDERS TAB (NUEVO MÓDULO RESTAURADO) -->
+      <div id="tab-remindersAdmin" class="hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Gestor de Reminders & Updates Operativos</h3>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <div>
+              <h4 style="margin-bottom: 14px; font-size: 15px;">Publicar Nuevo Reminder / Update</h4>
+              <div class="form-group">
+                <label>Título del Update / Comunicado</label>
+                <input type="text" id="remTitle" placeholder="Ej: Nueva Directiva de Mantenimiento de Hardware">
+              </div>
+              <div class="form-group">
+                <label>Prioridad / Tipo</label>
+                <select id="remType">
+                  <option value="normal">Informativo Normal (Amarillo)</option>
+                  <option value="urgent">Urgente / Crítico (Rojo)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Detalle del Comunicado</label>
+                <textarea id="remContent" rows="4" placeholder="Escriba los detalles o procedimientos que los agentes deben leer..."></textarea>
+              </div>
+              <button class="btn btn-primary" onclick="saveReminder()"><i class="fa-solid fa-paper-plane"></i> Publicar Update</button>
+            </div>
+
+            <div>
+              <h4 style="margin-bottom: 14px; font-size: 15px;">Updates Activos en el Sistema</h4>
+              <div id="adminRemindersList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUILDER TAB (EDITAR PREGUNTAS) -->
       <div id="tab-builder" class="hidden">
         <div class="panel">
           <div class="panel-header">
@@ -303,7 +383,7 @@
         </div>
       </div>
 
-      <!-- RESPONSES TAB (VER RESPUESTAS DE AGENTES) -->
+      <!-- RESPONSES TAB -->
       <div id="tab-responses" class="hidden">
         <div class="panel">
           <div class="panel-header">
@@ -323,13 +403,25 @@
         </div>
       </div>
 
-      <!-- VISTA DE AGENTE (DEMO DE CÓMO LO VE EL AGENTE) -->
+      <!-- VISTA DE AGENTE CON REMINDERS Y FORMULARIO -->
       <div id="tab-agentView" class="hidden">
-        <div class="panel" style="max-width: 700px; margin: 0 auto;">
+        <div class="panel" style="max-width: 750px; margin: 0 auto;">
           <div class="panel-header">
-            <h3>Encuesta Diaria de Operaciones</h3>
-            <span class="status-badge badge-pending">Agente Activo</span>
+            <h3>Portal de Agente & Updates de la Empresa</h3>
+            <span class="status-badge badge-pending">Sesión Agente</span>
           </div>
+
+          <!-- SECCIÓN DE REMINDERS EN LA VISTA DEL AGENTE -->
+          <div style="margin-bottom: 24px;">
+            <h4 style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase;">
+              <i class="fa-solid fa-bullhorn" style="color:var(--warning);"></i> Anuncios y Reminders Importantes
+            </h4>
+            <div id="agentRemindersContainer"></div>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 24px;">
+
+          <h4 style="font-size: 16px; margin-bottom: 16px;">Encuesta Diaria de Operaciones</h4>
           <form id="agentSurveyForm" onsubmit="handleAgentSubmit(event)">
             <div id="agentFormFields"></div>
             <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px;">
@@ -355,6 +447,23 @@
 
   <script>
     // ESTADO GLOBAL DE DATOS
+    let reminders = [
+      {
+        id: 1,
+        title: "Actualización de Procedimiento de Escalación",
+        type: "urgent",
+        date: "2026-07-20 07:30",
+        content: "A partir de hoy, todos los reportes de caídas de herramientas de soporte deben canalizarse por el nuevo canal de Slack #floor-support-alerts."
+      },
+      {
+        id: 2,
+        title: "Recordatorio de Marcas de Break",
+        type: "normal",
+        date: "2026-07-19 14:00",
+        content: "Por favor verificar que los estados del CRM coincidan exactamente con sus horarios en la rotación diaria."
+      }
+    ];
+
     let questions = [
       { id: 1, title: "¿Cómo estuvo la fluidez de herramientas durante tu turno?", type: "rating", required: true, options: [] },
       { id: 2, title: "¿Requiriste soporte presencial de un Floor Support?", type: "single", required: true, options: ["Sí", "No", "Parcialmente"] },
@@ -373,7 +482,6 @@
 
       document.getElementById(`tab-${tabId}`).classList.remove('hidden');
       
-      // Resaltar item del menú
       const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick').includes(tabId));
       if (activeNav) activeNav.classList.add('active');
 
@@ -385,6 +493,34 @@
       const group = document.getElementById("optionsGroup");
       if (type === 'single') group.classList.remove('hidden');
       else group.classList.add('hidden');
+    }
+
+    // GESTIÓN DE REMINDERS / UPDATES
+    function saveReminder() {
+      const title = document.getElementById("remTitle").value;
+      const type = document.getElementById("remType").value;
+      const content = document.getElementById("remContent").value;
+
+      if (!title || !content) return alert("Por favor, ingrese el título y el contenido del update.");
+
+      reminders.unshift({
+        id: Date.now(),
+        title,
+        type,
+        date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        content
+      });
+
+      document.getElementById("remTitle").value = "";
+      document.getElementById("remContent").value = "";
+
+      renderAll();
+      alert("Update publicado exitosamente.");
+    }
+
+    function deleteReminder(id) {
+      reminders = reminders.filter(r => r.id !== id);
+      renderAll();
     }
 
     // GESTIÓN DE PREGUNTAS
@@ -406,7 +542,6 @@
         options
       });
 
-      // Limpiar formulario
       document.getElementById("qTitle").value = "";
       document.getElementById("qOptions").value = "";
       document.getElementById("qRequired").checked = false;
@@ -420,11 +555,52 @@
       renderAll();
     }
 
-    // RENDERS
+    // RENDERS GENERATING UI
     function renderAll() {
       // Metrics
+      document.getElementById("totalRemindersCount").innerText = reminders.length;
       document.getElementById("totalQuestionsCount").innerText = questions.length;
       document.getElementById("totalResponsesCount").innerText = agentResponses.length;
+
+      // Render Dashboard & Agent Reminders
+      const dashRemContainer = document.getElementById("dashboardRemindersList");
+      const adminRemContainer = document.getElementById("adminRemindersList");
+      const agentRemContainer = document.getElementById("agentRemindersContainer");
+
+      dashRemContainer.innerHTML = "";
+      adminRemContainer.innerHTML = "";
+      agentRemContainer.innerHTML = "";
+
+      if (reminders.length === 0) {
+        dashRemContainer.innerHTML = "<p style='color:var(--text-muted); font-size:14px;'>No hay reminders activos actualmente.</p>";
+        agentRemContainer.innerHTML = "<p style='color:var(--text-muted); font-size:14px;'>No hay actualizaciones pendientes de la empresa.</p>";
+      }
+
+      reminders.forEach(r => {
+        const isUrgent = r.type === 'urgent';
+        const cardHtml = `
+          <div class="reminder-card ${isUrgent ? 'urgent' : ''}">
+            <div class="reminder-header">
+              <span class="reminder-title">${isUrgent ? '<i class="fa-solid fa-triangle-exclamation"></i> ' : ''}${r.title}</span>
+              <span class="reminder-date">${r.date}</span>
+            </div>
+            <p>${r.content}</p>
+          </div>
+        `;
+        dashRemContainer.innerHTML += cardHtml;
+        agentRemContainer.innerHTML += cardHtml;
+
+        adminRemContainer.innerHTML += `
+          <div class="reminder-card ${isUrgent ? 'urgent' : ''}">
+            <div class="reminder-header">
+              <span class="reminder-title">${r.title}</span>
+              <button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteReminder(${r.id})"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <p>${r.content}</p>
+            <span class="reminder-date" style="display:block; margin-top:6px;">Publicado: ${r.date}</span>
+          </div>
+        `;
+      });
 
       // Render Builder Questions
       const builderList = document.getElementById("builderQuestionsList");
@@ -448,7 +624,7 @@
       fullTbody.innerHTML = "";
 
       agentResponses.forEach(r => {
-        const row = `
+        recentTbody.innerHTML += `
           <tr>
             <td><strong>${r.agent}</strong></td>
             <td>${r.date}</td>
@@ -456,10 +632,9 @@
             <td><button class="btn btn-outline" style="padding:4px 10px; font-size:12px;" onclick="openModal(${r.id})"><i class="fa-solid fa-eye"></i> Ver Respuestas</button></td>
           </tr>
         `;
-        recentTbody.innerHTML += row;
 
         let answersSummary = Object.values(r.answers).join(" | ");
-        const fullRow = `
+        fullTbody.innerHTML += `
           <tr>
             <td><strong>${r.agent}</strong></td>
             <td>${r.date}</td>
@@ -467,10 +642,9 @@
             <td><button class="btn btn-outline" style="padding:4px 10px; font-size:12px;" onclick="openModal(${r.id})"><i class="fa-solid fa-eye"></i> Inspeccionar</button></td>
           </tr>
         `;
-        fullTbody.innerHTML += fullRow;
       });
 
-      // Render Agent View
+      // Render Agent View Fields
       const agentContainer = document.getElementById("agentFormFields");
       agentContainer.innerHTML = "";
       questions.forEach(q => {
