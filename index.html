@@ -58,19 +58,85 @@
             color: var(--text-main);
             min-height: 100vh;
             padding-bottom: 60px;
-            /* Fondo vibrante reforzado con más luces radiantes de color */
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated aurora mesh — slow drifting light instead of a static gradient */
+        .aurora-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(255, 141, 86, 0.22) 0%, transparent 45%),
-                radial-gradient(circle at 85% 20%, rgba(255, 191, 203, 0.18) 0%, transparent 40%),
-                radial-gradient(circle at 90% 85%, rgba(6, 149, 148, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 60%, rgba(251, 232, 131, 0.12) 0%, transparent 45%);
-            background-attachment: fixed;
+                radial-gradient(circle at 15% 15%, rgba(255, 141, 86, 0.26) 0%, transparent 45%),
+                radial-gradient(circle at 85% 20%, rgba(255, 191, 203, 0.20) 0%, transparent 40%),
+                radial-gradient(circle at 90% 85%, rgba(6, 149, 148, 0.32) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(251, 232, 131, 0.14) 0%, transparent 45%);
+            background-size: 180% 180%;
+            animation: auroraDrift 22s ease-in-out infinite alternate;
+            will-change: background-position;
+        }
+
+        @keyframes auroraDrift {
+            0%   { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%; }
+            50%  { background-position: 20% 30%, 80% 10%, 85% 80%, 25% 70%; }
+            100% { background-position: 10% 15%, 90% 25%, 95% 90%, 10% 85%; }
+        }
+
+        /* Floating particle canvas, sits behind all content */
+        #particleCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(24px) scale(0.98); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes popIn {
+            0%   { opacity: 0; transform: scale(0.85) translateY(14px); }
+            60%  { opacity: 1; transform: scale(1.03) translateY(-2px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes fireFlicker {
+            0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 6px rgba(255,191,203,0.6)); }
+            50% { transform: scale(1.15) rotate(2deg); filter: drop-shadow(0 0 12px rgba(255,191,203,0.9)); }
+        }
+
+        @keyframes shimmerSweep {
+            0% { background-position: -400px 0; }
+            100% { background-position: 400px 0; }
+        }
+
+        @keyframes ripple-anim {
+            to { transform: scale(3); opacity: 0; }
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(60px) scale(0.9); }
+            to   { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes progressGrow {
+            from { width: 0%; }
+        }
+
+        @keyframes gradientSpin {
+            to { --grad-angle: 360deg; }
         }
 
         .container {
             max-width: 1240px;
             margin: 0 auto;
             padding: 35px 20px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Header Layout */
@@ -84,7 +150,10 @@
             box-shadow: var(--shadow-lg), 0 0 25px rgba(255, 141, 86, 0.2);
             position: relative;
             overflow: hidden;
+            animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
+
+        .stat-streak i { display: inline-block; animation: fireFlicker 1.6s ease-in-out infinite; }
 
         .header::before {
             content: '';
@@ -247,6 +316,17 @@
             gap: 8px;
             font-family: 'Plus Jakarta Sans', sans-serif;
             letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-el {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.55);
+            transform: scale(0);
+            pointer-events: none;
+            animation: ripple-anim 0.6s ease-out forwards;
         }
 
         .btn-primary { 
@@ -344,20 +424,39 @@
             border-radius: 20px;
             border: 1px solid rgba(6, 149, 148, 0.35);
             padding: 24px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
             cursor: pointer;
             position: relative;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            opacity: 0;
+            animation: popIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+            will-change: transform;
+            overflow: hidden;
         }
 
+        .reminder-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 141, 86, 0.20), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .reminder-card:hover::before { opacity: 1; }
+
         .reminder-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px) scale(1.012);
             background: rgba(6, 149, 148, 0.18);
             border-color: var(--c-orange);
             box-shadow: var(--shadow-lg), var(--shadow-glow-orange);
         }
+
+        .reminder-card > * { position: relative; z-index: 1; }
 
         .card-header-row {
             display: flex;
@@ -469,17 +568,17 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(8, 12, 16, 0.92);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(0px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.25s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease, backdrop-filter 0.3s ease;
         }
 
-        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-overlay.active { opacity: 1; visibility: visible; backdrop-filter: blur(12px); }
 
         .modal-card {
             background: linear-gradient(145deg, var(--c-card-dark) 0%, var(--c-ultra-dark) 100%);
@@ -491,6 +590,14 @@
             box-shadow: var(--shadow-lg), var(--shadow-glow);
             max-height: 90vh;
             overflow-y: auto;
+            transform: scale(0.85) translateY(30px);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1) translateY(0);
+            opacity: 1;
         }
 
         .modal-header {
@@ -714,9 +821,70 @@
         .quiz-opt-btn.wrong { background: rgba(255, 141, 86, 0.35) !important; border-color: var(--c-orange) !important; box-shadow: 0 0 15px var(--c-orange); }
 
         .no-results { grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-muted); display: none; }
+
+        /* Toast Notifications (replaces alert()) */
+        #toastContainer {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: linear-gradient(135deg, var(--c-card-dark), var(--c-ultra-dark));
+            border: 1px solid var(--c-orange);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 18px rgba(255, 141, 86, 0.3);
+            color: var(--c-white);
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 320px;
+            animation: toastIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .toast.warn { border-color: var(--c-pink); box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 18px rgba(255, 191, 203, 0.35); }
+        .toast i { color: var(--c-orange); font-size: 16px; }
+        .toast.warn i { color: var(--c-pink); }
+
+        /* Quiz Progress Bar */
+        .quiz-progress-track {
+            width: 100%;
+            height: 8px;
+            background: var(--c-ultra-dark);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--c-orange), var(--c-yellow), var(--c-teal));
+            border-radius: 20px;
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 12px rgba(255, 141, 86, 0.6);
+        }
+
+        .quiz-opt-btn.selected-pulse { animation: popIn 0.3s ease both; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
+
+    <div class="aurora-layer"></div>
+    <canvas id="particleCanvas"></canvas>
+    <div id="toastContainer"></div>
 
     <div class="container">
         <!-- Header Section -->
@@ -858,6 +1026,7 @@
                 <h2><i class="fa-solid fa-trophy" style="color: var(--c-yellow);"></i> Weekly Knowledge Quiz</h2>
                 <button class="close-modal" onclick="closeQuizModal()"><i class="fas fa-times"></i></button>
             </div>
+            <div class="quiz-progress-track"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
             <div id="quizBody"></div>
         </div>
     </div>
@@ -987,6 +1156,100 @@
             } catch(e) {}
         };
 
+        // --- Ambient Particle Background (soft glowing orbs drifting behind the UI) ---
+        (function initParticles() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let w, h, particles;
+            const colors = ['rgba(255,141,86,', 'rgba(255,191,203,', 'rgba(251,232,131,', 'rgba(6,149,148,'];
+            const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+
+            function makeParticles() {
+                const count = Math.min(42, Math.floor((w * h) / 45000));
+                particles = Array.from({ length: count }, () => ({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: 30 + Math.random() * 70,
+                    dx: (Math.random() - 0.5) * 0.15,
+                    dy: (Math.random() - 0.5) * 0.15,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 0.05 + Math.random() * 0.09
+                }));
+            }
+
+            function tick() {
+                ctx.clearRect(0, 0, w, h);
+                particles.forEach(p => {
+                    p.x += p.dx; p.y += p.dy;
+                    if (p.x < -p.r) p.x = w + p.r; if (p.x > w + p.r) p.x = -p.r;
+                    if (p.y < -p.r) p.y = h + p.r; if (p.y > h + p.r) p.y = -p.r;
+                    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+                    grad.addColorStop(0, p.color + p.alpha + ')');
+                    grad.addColorStop(1, p.color + '0)');
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                if (!reduceMotion) requestAnimationFrame(tick);
+            }
+
+            resize();
+            makeParticles();
+            window.addEventListener('resize', () => { resize(); makeParticles(); });
+            tick();
+        })();
+
+        // --- Toast Notifications (replaces jarring native alert() popups) ---
+        function toast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = `toast ${type === 'warn' ? 'warn' : ''}`;
+            const icon = type === 'warn' ? 'fa-triangle-exclamation' : 'fa-circle-check';
+            el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
+            container.appendChild(el);
+            playSound(type === 'warn' ? 'wrong' : 'click');
+            setTimeout(() => {
+                el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(40px)';
+                setTimeout(() => el.remove(), 300);
+            }, 3200);
+        }
+
+        // --- Ripple Effect on Buttons ---
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn, .quiz-opt-btn, .category-btn');
+            if (!btn) return;
+            const rect = btn.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            const size = Math.max(rect.width, rect.height) * 1.4;
+            ripple.className = 'ripple-el';
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 650);
+        });
+
+        // --- Animated Counter (smooth count-up instead of an instant number swap) ---
+        function animateCounter(el, from, to, suffix = '', duration = 700) {
+            const start = performance.now();
+            function step(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(from + (to - from) * eased);
+                el.innerText = `${current}${suffix}`;
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
         // Rich Text Formatting Command Handler
         function execCmd(command, value = null) {
             document.execCommand(command, false, value);
@@ -1080,9 +1343,14 @@
             applyRoleRestrictions();
         }
 
+        let lastXP = 0, lastStreak = 0;
         function updateUserStatsDisplay() {
-            document.getElementById('userXP').innerText = `${userStats.xp} XP`;
-            document.getElementById('userStreak').innerText = `${userStats.streak} Wks`;
+            const xpEl = document.getElementById('userXP');
+            const streakEl = document.getElementById('userStreak');
+            animateCounter(xpEl, lastXP, userStats.xp, ' XP');
+            animateCounter(streakEl, lastStreak, userStats.streak, ' Wks');
+            lastXP = userStats.xp;
+            lastStreak = userStats.streak;
         }
 
         function canManagePosts() {
@@ -1151,15 +1419,21 @@
                 noResults.style.display = 'block';
             } else {
                 noResults.style.display = 'none';
-                [...filtered].reverse().forEach(item => {
+                [...filtered].reverse().forEach((item, i) => {
                     const card = document.createElement('div');
                     card.className = 'reminder-card';
+                    card.style.animationDelay = `${Math.min(i, 10) * 0.06}s`;
                     card.onclick = (e) => {
                         if (!e.target.closest('.card-actions') && !e.target.closest('.reactions-container')) {
                             playSound('click');
                             openViewModal(item.id);
                         }
                     };
+                    card.addEventListener('mousemove', (e) => {
+                        const r = card.getBoundingClientRect();
+                        card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+                        card.style.setProperty('--my', `${e.clientY - r.top}px`);
+                    });
 
                     const tagsHtml = item.categories.map(cat => `<span class="tag">${cat}</span>`).join('');
                     const postReactions = item.reactions || { "👍": 0, "🔥": 0, "📌": 0, "👀": 0 };
@@ -1279,12 +1553,12 @@
             const selectedCategories = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(cb => cb.value);
 
             if (selectedCategories.length === 0) {
-                alert("Please select at least one category tag.");
+                toast("Please select at least one category tag.", "warn");
                 return;
             }
 
             if (!description.trim()) {
-                alert("Please enter a description for the post.");
+                toast("Please enter a description for the post.", "warn");
                 return;
             }
 
@@ -1299,6 +1573,7 @@
             saveData();
             closeModal();
             renderReminders();
+            toast(id ? "Reminder updated successfully." : "New reminder published.");
         }
 
         function saveData() {
@@ -1311,7 +1586,7 @@
         function startWeeklyQuiz() {
             playSound('click');
             if (questions.length === 0) {
-                alert("There are no quiz questions configured currently.");
+                toast("There are no quiz questions configured currently.", "warn");
                 return;
             }
 
@@ -1319,6 +1594,7 @@
             quizScore = 0;
             currentUserAnswers = [];
             quizModal.classList.add('active');
+            document.getElementById('quizProgressFill').style.width = '0%';
             renderQuizQuestion();
         }
 
@@ -1326,7 +1602,10 @@
 
         function renderQuizQuestion() {
             const container = document.getElementById('quizBody');
+            const progressPct = Math.round((currentQuizIndex / questions.length) * 100);
+            document.getElementById('quizProgressFill').style.width = `${progressPct}%`;
             if (currentQuizIndex >= questions.length) {
+                document.getElementById('quizProgressFill').style.width = '100%';
                 const percentage = Math.round((quizScore / questions.length) * 100);
                 const earnedXP = quizScore * 25;
                 userStats.xp += earnedXP;
@@ -1346,7 +1625,15 @@
                 quizSubmissions.push(submission);
                 saveData();
 
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                const fireConfetti = () => {
+                    const colors = ['#ff8d56', '#ffbfcb', '#fbe883', '#069594'];
+                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors });
+                    confetti({ particleCount: 60, angle: 60, spread: 60, origin: { x: 0, y: 0.7 }, colors });
+                    confetti({ particleCount: 60, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors });
+                };
+                fireConfetti();
+                setTimeout(fireConfetti, 350);
+                if (percentage === 100) setTimeout(fireConfetti, 700);
                 playSound('correct');
 
                 container.innerHTML = `
@@ -1390,8 +1677,8 @@
 
             buttons.forEach((btn, idx) => {
                 btn.disabled = true;
-                if (idx === q.correctIndex) btn.classList.add('correct');
-                else if (idx === selectedIdx) btn.classList.add('wrong');
+                if (idx === q.correctIndex) btn.classList.add('correct', 'selected-pulse');
+                else if (idx === selectedIdx) btn.classList.add('wrong', 'selected-pulse');
             });
 
             if (isCorrect) { playSound('correct'); quizScore++; } 
@@ -1554,6 +1841,7 @@
             closeEditQuestionModal();
             renderAdminStats();
             renderAdminQuestions();
+            toast(id ? "Question updated." : "New question added to the quiz bank.");
         }
 
         init();
