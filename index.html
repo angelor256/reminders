@@ -38,6 +38,87 @@
             --shadow-glow: 0 0 25px rgba(6, 149, 148, 0.25);
         }
 
+        /* --- ESTILOS DE LA ANIMACIÓN DE INICIO (STARTUP OVERLAY) --- */
+        #startup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--c-ultra-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+
+        .startup-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .spinner-ring {
+            width: 70px;
+            height: 70px;
+            border: 4px solid rgba(255, 255, 255, 0.08);
+            border-left-color: var(--c-teal);
+            border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+        }
+
+        .startup-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--c-white) 0%, var(--c-teal) 50%, var(--c-yellow) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite, fadeInUp 1s ease-out;
+            margin: 0;
+        }
+
+        .startup-subtitle {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        #startup-overlay.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* --- OCULTAR SCROLLBARS GLOBALMENTE MANTENIENDO EL SCROLL --- */
         * {
             box-sizing: border-box;
@@ -700,6 +781,15 @@
 </head>
 <body>
 
+    <!-- Pantalla de Inicio / Startup Animation -->
+    <div id="startup-overlay">
+        <div class="startup-content">
+            <div class="spinner-ring"></div>
+            <h1 class="startup-title">BA HUB 3.0</h1>
+            <p class="startup-subtitle">Cargando plataforma...</p>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Header Section -->
         <div class="header">
@@ -936,6 +1026,14 @@
     </div>
 
     <script>
+        // Transición de la pantalla de inicio (Startup Animation)
+        window.addEventListener('load', () => {
+            const overlay = document.getElementById('startup-overlay');
+            setTimeout(() => {
+                overlay.classList.add('fade-out');
+            }, 1800);
+        });
+
         // Audio Effects Synthesizer
         const playSound = (type) => {
             try {
