@@ -524,7 +524,7 @@
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.25s ease;
+            transition: opacity 0.25s ease;
         }
 
         .modal-overlay.active { opacity: 1; visibility: visible; }
@@ -539,6 +539,43 @@
             box-shadow: var(--shadow-lg);
             max-height: 90vh;
             overflow-y: auto;
+            position: relative;
+        }
+
+        /* --- VISTA MOLDEABLE / REDIMENSIONABLE (VIEW MODE) --- */
+        .resizable-modal {
+            resize: both; /* Permite estirar horizontal y verticalmente */
+            overflow: auto;
+            min-width: 320px;
+            min-height: 300px;
+            max-width: 95vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Agarradera táctil/visual en la esquina inferior derecha */
+        .resize-handle {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            cursor: se-resize;
+            touch-action: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            pointer-events: auto;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .resize-handle:hover {
+            opacity: 1;
+            color: #6366f1;
         }
 
         .modal-header {
@@ -883,9 +920,9 @@
         </div>
     </div>
 
-    <!-- Modal View Details -->
+    <!-- Modal View Details (MOLDEABLE / REDIMENSIONABLE EN MÓVIL Y DESKTOP) -->
     <div class="modal-overlay" id="viewPostModal">
-        <div class="modal-card">
+        <div class="modal-card resizable-modal" id="viewModalCard">
             <div class="modal-header">
                 <h2>Reminder Details</h2>
                 <button class="close-modal" onclick="closeViewModal()"><i class="fas fa-times"></i></button>
@@ -893,11 +930,16 @@
             <div style="text-align: center; font-size: 3.2em; margin-bottom: 12px;" id="viewPostEmoji">💡</div>
             <h3 style="text-align: center; font-size: 1.35em; color: var(--c-white); margin-bottom: 18px; font-family: 'Plus Jakarta Sans', sans-serif;" id="viewPostTitle">Title</h3>
             
-            <div class="formatted-content" style="background: var(--c-ultra-dark); padding: 20px; border-radius: 14px; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 14px; line-height: 1.65; margin-bottom: 22px; max-height: 350px; overflow-y: auto;" id="viewPostDesc"></div>
+            <div class="formatted-content" style="flex-grow: 1; background: var(--c-ultra-dark); padding: 20px; border-radius: 14px; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 14px; line-height: 1.65; margin-bottom: 22px; overflow-y: auto;" id="viewPostDesc"></div>
             
             <div class="tags" id="viewPostTags"></div>
             <div style="display: flex; justify-content: flex-end; margin-top: 22px;">
                 <button class="btn btn-primary" onclick="closeViewModal()">Close</button>
+            </div>
+
+            <!-- Agarradera táctil para redimensionar con el ratón o el dedo -->
+            <div class="resize-handle" id="resizeHandle">
+                <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
             </div>
         </div>
     </div>
@@ -1124,6 +1166,8 @@
         const noResults = document.getElementById('noResults');
         const modal = document.getElementById('postModal');
         const viewModal = document.getElementById('viewPostModal');
+        const viewModalCard = document.getElementById('viewModalCard');
+        const resizeHandle = document.getElementById('resizeHandle');
         const quizModal = document.getElementById('quizModal');
         const adminModal = document.getElementById('adminModal');
         const btnAddNewPost = document.getElementById('btnAddNewPost');
@@ -1137,6 +1181,7 @@
             renderCheckboxes();
             renderReminders();
             applyRoleRestrictions();
+            setupTouchResize();
         }
 
         function updateUserStatsDisplay() {
@@ -1298,11 +1343,57 @@
                 document.getElementById('viewPostTitle').innerText = post.title;
                 document.getElementById('viewPostDesc').innerHTML = post.description;
                 document.getElementById('viewPostTags').innerHTML = post.categories.map(cat => `<span class="tag">${cat}</span>`).join('');
+                
+                // Restablecer dimensiones iniciales
+                viewModalCard.style.width = '92%';
+                viewModalCard.style.height = 'auto';
+                
                 viewModal.classList.add('active');
             }
         }
 
         function closeViewModal() { viewModal.classList.remove('active'); }
+
+        // --- SISTEMA DE REDIMENSIÓN TÁCTIL / DRAG FOR TOUCH DEVICES ---
+        function setupTouchResize() {
+            let startX, startY, startWidth, startHeight;
+
+            const onPointerDown = (e) => {
+                const pointer = e.touches ? e.touches[0] : e;
+                startX = pointer.clientX;
+                startY = pointer.clientY;
+                startWidth = parseInt(document.defaultView.getComputedStyle(viewModalCard).width, 10);
+                startHeight = parseInt(document.defaultView.getComputedStyle(viewModalCard).height, 10);
+
+                window.addEventListener('mousemove', onPointerMove);
+                window.addEventListener('mouseup', onPointerStop);
+                window.addEventListener('touchmove', onPointerMove, { passive: false });
+                window.addEventListener('touchend', onPointerStop);
+            };
+
+            const onPointerMove = (e) => {
+                const pointer = e.touches ? e.touches[0] : e;
+                const newWidth = startWidth + (pointer.clientX - startX);
+                const newHeight = startHeight + (pointer.clientY - startY);
+
+                if (newWidth >= 320 && newWidth <= window.innerWidth * 0.95) {
+                    viewModalCard.style.width = newWidth + 'px';
+                }
+                if (newHeight >= 300 && newHeight <= window.innerHeight * 0.9) {
+                    viewModalCard.style.height = newHeight + 'px';
+                }
+            };
+
+            const onPointerStop = () => {
+                window.removeEventListener('mousemove', onPointerMove);
+                window.removeEventListener('mouseup', onPointerStop);
+                window.removeEventListener('touchmove', onPointerMove);
+                window.removeEventListener('touchend', onPointerStop);
+            };
+
+            resizeHandle.addEventListener('mousedown', onPointerDown);
+            resizeHandle.addEventListener('touchstart', onPointerDown, { passive: false });
+        }
 
         function editPost(id) {
             playSound('click');
